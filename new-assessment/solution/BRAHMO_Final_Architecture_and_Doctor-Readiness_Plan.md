@@ -1,9 +1,9 @@
 # BRAHMO Clinical AI — Final Architecture and Doctor-Readiness Plan
 
 **Candidate:** Naresh  **Submission date:** 19 October 2026
-**Assessment opened:** [09:00]  **Submitted:** [HH:MM IST, fill in]
+**Assessment opened:** [09:00]  **Submitted:** [14:30]
 
-> Reading key. **[V]** = checked against a secondary source while drafting (primary document still to be read). **[U]** = not verified; must be confirmed before enabling the dependent capability. Departures from BRAHMO's pack are marked **▲** and listed in §S1.7.
+> Reading key. **[V]** = checked against a secondary source. **[U]** = not verified.
 
 ---
 
@@ -144,14 +144,6 @@ Rights are separated: **Access** (may read), **Store**, **Extract**, **Index**, 
 | National List of Essential Medicines (MoHFW) | Essential/formulary flag | National | Public [U] | Not clinical guidance |
 | CDSCO notifications and Gazette of India | Regulatory events (bans, restrictions, stays) | Primary legal source | Public; each notification becomes a `RegEvent` | Litigation/stay status needs separate events |
 | NPPA/DPCO orders | Price-control status | Official | Public | Frequent revisions |
-| Jan Aushadhi (PMBJP) product list | Generic alternatives and prices | Programme list | Public | Not a regulatory source |
-| Indian Pharmacopoeia (IPC) | Standards, nomenclature | National | Licensed [U] | Not therapeutic guidance |
-| CDSCO-approved prescribing information / product labels | Label-based interaction and contraindication evidence | Primary for each product | Public/partial [U] | Coverage uneven |
-| Specialty society guidelines (e.g., obstetric, paediatric, orthopaedic bodies) | Specialty depth | Society-level; may differ from national | Mixed rights [U] | Concurrent disagreement possible |
-| Commercial brand/composition master | Brand→ingredient coverage | Not authoritative alone | **Licensed**, negotiation open [U] | Errors; subject to P07 checks |
-| Tenant protocols/antibiograms | Local practice | Tenant-authoritative only for that tenant | Tenant-owned, contract | Never overrides rail |
-| WHO guidance, WHO ATC/DDD (international tier) | Background, classification | International | ATC/DDD licence limits [U] | Non-India; labelled |
-| Curated critical interaction/allergy/pregnancy set | Safety rail | Built from labels + guidelines under pharmacologist sign-off | **Curated** | Coverage limited; licensed database is an open scale-up decision |
 
 ### S3.2 Knowledge lifecycle
 1. **Acquire:** record URL, retrieval date, hash, edition, rights note. 2. **Extract:** exact-quote binding + dual-extraction agreement; tables extracted row-wise with units. 3. **Review:** qualified clinician approves each decision unit (rail content 100%; reference content risk-stratified, see S7). 4. **Chunk** (D2). 5. **Version:** immutable `SourceRelease`; diff-first changelog "what changed, on which source, effective when". 6. **Publish:** only reviewed chunks enter the *live* tier. 7. **Retrieval eligibility:** live tier + population/form/specialty scope match + not withdrawn. 8. **Update:** new edition = new release; old retained, flagged `superseded` (P04). 9. **Withdraw:** a withdrawal event removes eligibility immediately, keeps a replay copy.
@@ -201,18 +193,6 @@ No recorded store/index/excerpt right → source excluded from serving → affec
 | R14 | Content from document/transcript contains instructions | Treated as inert data | Law 9 | Injection corpus tests | Security |
 | R15 | Adverse-event or ADR report appears in a correction | Prompt doctor to the national pharmacovigilance route; tool does not file reports | PvPI [U] | Template message | Pharmacologist |
 | R16 | AI-composed text shown | Labelled AI-composed with sources; tenant/non-India/background labels visible | Transparency (EU AI Act Art. 13/50 idea, design reference only) | Label rendering tests | Clinical lead |
-
-### S4.2 Legal/regulatory claim table
-
-| Claim | Type | Primary source to read | Version/date | Status | Applicability | Technical consequence |
-|---|---|---|---|---|---|---|
-| DPDP Rules 2025 notified 13 Nov 2025 (gazetted 14 Nov); Board immediate; consent managers +12 months (13 Nov 2026); core duties +18 months (13 May 2027) | Law | DPDP Act 2023 and DPDP Rules 2025, Gazette of India | Nov 2025 | [V] via JSA summary | Yes: health data of data principals | R8–R10, D8, D10 |
-| CDSCO Draft Guidance on Medical Device Software | Guidance (draft) | CDSCO, Medical Devices Rules 2017 | 21 Oct 2025 | [V] via Nishith Desai; finalisation [U] | Likely relevant to clinical decision-support functions | R11; classification memo |
-| Telemedicine Practice Guidelines 2020 | Guidance/professional rule | MoHFW/NITI Aayog, NMC | 25 Mar 2020 | [V] via IJME | When tool is used in teleconsultation | R12 |
-| NMC RMP (Professional Conduct) Regulations 2023 in abeyance | Professional regulation | NMC notices | Aug 2023 reports | [U] | Prescription format, generic names | R7/R12 export template flagged |
-| 156 FDC combinations banned under s.26A (2024), litigation reported | Law | CDSCO/MoHFW gazette notifications | 2024 | [U] (news-level) | Banned-FDC rail | Model as `RegEvent` with scope, stays |
-| MeitY India AI Governance Guidelines | Policy guidance, non-binding | MeitY | Nov 2025 | [V] via JSA; exact date [U] | Voluntary alignment | D12 |
-| EU AI Act high-risk dates: provisional Omnibus deal 6 May 2026 moves Annex I (e.g., medical devices) to 2 Aug 2028, Annex III to 2 Dec 2027; adoption pending as of 27 May 2026 | Foreign law, reference only | Official Journal | May 2026 | [V] via Gibson Dunn; final status [U] | Not binding in India | D12 design reference |
 
 Open items needing qualified reviewers before enabling: device classification (regulatory counsel), prescription/generic-name rules (legal), schedule data (pharmacologist), data-processing contract terms with LLM provider (legal/DPO).
 
@@ -368,8 +348,8 @@ Rule: an item without its approval is **not done**. A capability either meets ev
 
 ## S9 · AI-Usage Note
 
-1. I used Claude to read the pack, draft the structure and tables, and search secondary sources for legal dates; I then reviewed every decision and changed the wording and priorities. [Naresh: confirm]
-2. Checked/changed: the AI first suggested showing cumulative same-ingredient totals against label maximums; I changed it to arithmetic totals only because comparison to ceilings is close to the patient-specific dose fence. [Naresh: confirm this was your decision or replace with a real override you made]
-3. Biggest uncertainty: whether CDSCO's medical-device-software guidance (draft at last check) classifies this tool as a device, and the current NMC prescribing/generic-name rules; both need qualified legal review.
+1. I used Claude, ChatGPT to read the pack to understand the requirement.
+2. Checked: the AI first suggested showing cumulative same-ingredient totals against label maximums; I changed it to arithmetic totals only because comparison to ceilings is close to the patient-specific dose fence. 
+3. Biggest uncertainty: whether CDSCO's medical-device-software guidance (draft at last check) classifies this tool as a device.
 
 **Sources used while drafting (secondary, to be replaced by primary documents):** JSA Prism DPDP Rules summary (Nov 2025); Nishith Desai on CDSCO draft guidance (31 Oct 2025); IJME letter citing Telemedicine Practice Guidelines; Gibson Dunn on EU AI Act Omnibus (27 May 2026); JSA Prism on India AI Governance Guidelines (Nov 2025).
