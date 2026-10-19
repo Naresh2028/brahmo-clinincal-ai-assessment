@@ -1,7 +1,7 @@
 # BRAHMO Clinical AI — Final Architecture and Doctor-Readiness Plan
 
-**Candidate:** Naresh  **Submission date:** 17 October 2026
-**Assessment opened:** [HH:MM IST, fill in]  **Submitted:** [HH:MM IST, fill in]
+**Candidate:** Naresh  **Submission date:** 19 October 2026
+**Assessment opened:** [09:00]  **Submitted:** [HH:MM IST, fill in]
 
 > Reading key. **[V]** = checked against a secondary source while drafting (primary document still to be read). **[U]** = not verified; must be confirmed before enabling the dependent capability. Departures from BRAHMO's pack are marked **▲** and listed in §S1.7.
 
